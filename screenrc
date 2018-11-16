@@ -1,0 +1,27 @@
+defescape ``
+escape ``
+bind ; windowlist -b
+#bind j focus down
+bind j focus next
+#bind k focus up
+#bind t focus top
+#bind b focus bottom
+hardstatus alwayslastline "%-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%<"
+activity '^GActivity in window %n'
+defscrollback 10000
+
+# skip the startup message
+# startup_message off
+#
+# # Automatically detach on hangup.
+# autodetach on
+#
+# # Change default scrollback value for new windows defscrollback 5000
+#
+# # change the keybinding to split window horizontally bind l split bind o only
+#
+# # change copy binding
+bind h copy
+#
+# # Change the xterm initialization string from is2=\E[!p\E[?3;4l\E[4l\E> # (This fixes the "Aborted because of window size change" konsole symptoms found #  in bug #134198) termcapinfo xterm* 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
+#
