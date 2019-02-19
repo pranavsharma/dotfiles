@@ -1,7 +1,3 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; my .emacs file
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (setq load-path
       (cons "C:\\Users\\prs\\AppData\\Roaming\\.emacs.d\\site-lisp" load-path))
 (setq load-path
@@ -84,7 +80,7 @@
 (global-auto-revert-mode t)
 
 (add-hook 'text-mode-hook 'auto-fill-mode)
-(setq-default fill-column 80)
+(setq-default fill-column 120)
 
 (global-set-key "\C-xr" 'remember)
 
@@ -124,13 +120,17 @@
 (global-set-key (kbd "C-c m l") 'magit-log)
 (global-hl-line-mode 1)
 ;;(set-face-background hl-line-face "#333333")
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq shell-scroll-to-bottom-on-input t)
 
 ;; Google C++ style guide
 (require 'google-c-style)
 (add-hook 'c-mode-common-hook 'google-set-c-style)
 (add-hook 'c-mode-common-hook 'google-make-newline-indent)
+
+(add-hook 'c-mode-common-hook
+          (function (lambda ()
+                    (add-hook 'before-save-hook
+                              'clang-format-buffer))))
 
 (global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -155,6 +155,7 @@
         (message "Indented buffer.")))))
 
 (global-set-key (kbd "C-c n") 'indent-region-or-buffer)
+(global-cwarn-mode 1)
 (global-linum-mode)
 ;;(load-theme 'warm-night t)
 (load-theme 'dracula t)
