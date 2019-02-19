@@ -10,10 +10,11 @@
 (setq exec-path (append exec-path '("C:\\Users\\prs\\MySoftware\\")))
 (setq exec-path (append exec-path '("C:\\Users\\prs\\MySoftware\\bin")))
 (setq exec-path (append exec-path '("C:\\ProgramData\\chocolatey\\bin")))
+(setq exec-path (append exec-path '("C:\\Program Files\\LLVM\\bin\\")))
 
 (require 'package)
 (add-to-list 'package-archives
-  '("melpa" . "http://melpa.milkbox.net/packages/") t)
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize)
 
 ;; Added by Package.el.  This must come before configurations of
@@ -31,15 +32,17 @@
 (require 'helm-config)
 (helm-mode 1)
 (global-set-key (kbd "M-x") 'helm-M-x)
-;(global-set-key (kbd "C-c h") 'helm-mini)
+                                        ;(global-set-key (kbd "C-c h") 'helm-mini)
 (global-set-key (kbd "C-x b") 'helm-mini)
 (setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
-(global-set-key (kbd "C-c s") 'helm-ag-project-root)
+                                        ;(global-set-key (kbd "C-c s") 'helm-ag-project-root)
+(global-set-key (kbd "C-c s") 'helm-rg-project-root)
 
-; recent files
+                                        ; recent files
 (require 'recentf)
 (recentf-mode 1)
 (global-set-key "\C-x\C-r" 'recentf-open-files)
+(setq column-number-mode t)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -48,9 +51,10 @@
  ;; If there is more than one, they won't work right.
  '(comint-scroll-to-bottom-on-input t)
  '(compilation-message-face (quote default))
+ '(cursor-type t)
  '(custom-safe-themes
    (quote
-    ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
+    ("e491d84f66d5d540e8459e9af173789d6b70e42a57b2a537823441b6921b39bd" "274fa62b00d732d093fc3f120aca1b31a6bb484492f31081c1814a858e25c72e" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
  '(display-time-day-and-date t)
  '(electric-pair-mode 1)
  '(frame-background-mode (quote dark))
@@ -61,7 +65,7 @@
  '(menu-bar-mode t)
  '(package-selected-packages
    (quote
-    (helm-ag magit solarized-theme find-file-in-repository ag clang-format dumb-jump cmake-mode ace-window helm-cscope xcscope markdown-mode helm csharp-mode protobuf-mode)))
+    (warm-night-theme fill-column-indicator aggressive-indent dracula-theme rg company helm-ag magit solarized-theme find-file-in-repository ag clang-format dumb-jump cmake-mode ace-window helm-cscope xcscope markdown-mode helm csharp-mode protobuf-mode)))
  '(recentf-auto-cleanup (quote never))
  '(recentf-max-saved-items 1000)
  '(ring-bell-function (quote ignore))
@@ -69,13 +73,13 @@
  '(tool-bar-mode nil))
 
 (defun revert-all-buffers ()
-    "Refreshes all open buffers from their respective files."
-    (interactive)
-    (dolist (buf (buffer-list))
-      (with-current-buffer buf
-        (when (and (buffer-file-name) (file-exists-p (buffer-file-name)) (not (buffer-modified-p)))
-          (revert-buffer t t t) )))
-    (message "Refreshed open files.") )
+  "Refreshes all open buffers from their respective files."
+  (interactive)
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (and (buffer-file-name) (file-exists-p (buffer-file-name)) (not (buffer-modified-p)))
+        (revert-buffer t t t) )))
+  (message "Refreshed open files.") )
 
 (global-auto-revert-mode t)
 
@@ -109,17 +113,16 @@
 (global-set-key (kbd "C-\-") 'dumb-jump-back)
 (global-set-key (kbd "C-c q") 'dumb-jump-quick-look)
 (setq dumb-jump-selector 'helm)
-(add-hook 'after-init-hook 'global-company-mode)
 
-;;(rg-define-search rg-search-all :files "all" :dir project)
-;;(global-set-key (kbd "C-c ,") 'rg-search-all)
-(global-set-key (kbd "C-c ,") 'ag-project)
+(rg-define-search rg-search-all :files "all" :dir project)
+(global-set-key (kbd "C-c ,") 'rg-search-all)
+;;(global-set-key (kbd "C-c ,") 'ag-project)
 (global-set-key (kbd "C-x f") 'find-file-in-repository)
 
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-c m d") 'magit-diff)
 (global-set-key (kbd "C-c m l") 'magit-log)
-;;(global-hl-line-mode 1)
+(global-hl-line-mode 1)
 ;;(set-face-background hl-line-face "#333333")
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq shell-scroll-to-bottom-on-input t)
@@ -152,13 +155,21 @@
         (message "Indented buffer.")))))
 
 (global-set-key (kbd "C-c n") 'indent-region-or-buffer)
+(global-linum-mode)
+;;(load-theme 'warm-night t)
+(load-theme 'dracula t)
+
+(defun indent-buffer ()
+  (interactive)
+  (save-excursion
+    (indent-region (point-min) (point-max) nil)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:background "black" :foreground "gray" :height 107 :family "DejaVu Sans Mono")))))
+ '(default ((t (:height 110 :family "Consolas")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; TIPS n TRICKS
